@@ -1,0 +1,200 @@
+#!/bin/perl
+
+my $file = ".project.txt";
+open(my $fh, '<', $file) or die "Cannot open file: $!";
+for (my $i = 1; $i <= 5; $i++) {
+	my $line = <$fh>;
+	last unless defined $line;  # Exit the loop if there are fewer than 5 lines
+	if ($i == 1) {
+		our $Author = $line;
+	} elsif ($i == 2) {
+		our $Project = $line;
+	} elsif ($i == 3) {
+		our $UniName = $line;
+	} elsif ($i == 4) {
+		our $Group = $line;
+	} elsif ($i == 5) {
+		our $Tutor = $line;
+	}
+}
+close($fh);
+
+print <<'END';
+\documentclass[13pt,a4paper]{extarticle}
+
+%%------------------------------- preamble ------------------------------------
+
+%% comment next for EN
+\usepackage{tgbonum}
+\usepackage[T1]{fontenc}          % PS fonts
+% \usepackage{newtxtext,newtxmath}  % do not use CM fonts
+\usepackage{amsmath}              % multi-line and other mathematical statements
+\usepackage{setspace}             % setting the spacing between lines
+\usepackage{graphicx}             % go far beyond what the graphics package
+\usepackage[normalem]{ulem}       % various types of underlining
+\usepackage{caption}              % rotating captions, sideways captions, etc.
+\usepackage{float}                % tables and figures in the multi-column environment 
+\usepackage{subcaption}           % for subfigures and the like
+\usepackage{longtable}            % tables that continue to the next page
+\usepackage{multirow}             % tabular cells spanning multiple rows
+% \usepackage[table]{xcolor}        % driver-independent color extensions
+\usepackage{csquotes}             % context sensitive quotation facilities
+\usepackage[backend=biber,authordate]{biblatex-chicago}  % Chicago Manual of Style
+\usepackage[T1]{fontenc}
+\usepackage{libertine}
+% \usepackage[libertine]{newtxmath}
+% \usepackage[version=4]{mhchem}
+% \usepackage{xcolor}
+% \usepackage{titlesec}
+% \usepackage{sectsty}
+
+%% document dimensions
+\usepackage[a4paper, left=20mm,right=20mm,top=20mm,bottom=20mm,headheight=6mm,footskip=12mm]{geometry}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1ex}
+% \titleformat{\section}[block]{\color{orange}\Large\bfseries\filcenter}{}{1em}{}
+% \titleformat{\subsection}[hang]{\bfseries}{}{1em}{}
+\setcounter{secnumdepth}{-1}
+% \sectionfont{\centering}
+
+
+%% headers & footers
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\fancyhf{}                            % clear off all default fancyhdr headers and footers
+\rhead{\small{\emph{\projtitle, \projauthor}}}
+\rfoot{\small{\thepage\ / \pageref{LastPage}}}
+\pagestyle{fancy}                     % apply the fancy header style
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%% colors
+\usepackage{color}
+\definecolor{engineering}{rgb}{0.549, 0.176, 0.098}
+\definecolor{cloudwhite}{cmyk}{0,0,0,0.025}
+
+%% source-code listings
+% \usepackage{listings}
+% \lstset{ %
+%  language=C,                        % choose the language of the code
+%  basicstyle=\footnotesize\ttfamily,
+%  keywordstyle=\bfseries,
+%  numbers=left,                      % where to put the line-numbers
+%  numberstyle=\scriptsize\texttt,    % the size of the fonts that are used for the line-numbers
+%  stepnumber=1,                      % the step between two line-numbers. If it's 1 each line will be numbered
+%  numbersep=8pt,                     % how far the line-numbers are from the code
+%  frame=tb,
+%  float=htb,
+%  aboveskip=8mm,
+%  belowskip=4mm,
+%  backgroundcolor=\color{cloudwhite},
+%  showspaces=false,                  % show spaces adding particular underscores
+%  showstringspaces=false,            % underline spaces within strings
+%  showtabs=false,                    % show tabs within strings adding particular underscores
+%  tabsize=2,                         % sets default tabsize to 2 spaces
+%  captionpos=t,                      % sets the caption-position to top
+%  belowcaptionskip=12pt,             % space between caption and listing
+%  breaklines=true,                   % sets automatic line breaking
+%  breakatwhitespace=false,           % sets if automatic breaks should only happen at whitespace
+%  escapeinside={\%*}{*)},            % if you want to add a comment within your code
+%  morekeywords={*,var,template,new}  % if you want to add more keywords to the set
+% }
+
+% hyperreferences (HREF, URL)
+\usepackage{hyperref}
+\hypersetup{
+    plainpages=false, 
+    pdfpagelayout=SinglePage,
+    bookmarksopen=false,
+    bookmarksnumbered=true,
+    breaklinks=true,
+    linktocpage,
+    colorlinks=true,
+    linkcolor=engineering,
+    urlcolor=engineering,
+    filecolor=engineering,
+    citecolor=engineering,
+    allcolors=engineering
+}
+
+%% path to the figures directory
+\graphicspath{{figures/}}
+
+%% bibliography file, must be in preamble
+\addbibresource{bibliography.bib}
+
+
+%% my environments for infos
+\newenvironment{info}[1]{\vspace*{6mm}\color{blue}[ \textbf{INFO:} \begin{em} #1}
+                        {\vspace*{3mm}\end{em} ]}
+\newenvironment{infoopt}[1]{\vspace*{6mm}\color{blue}[ \textbf{INFO (elemento opcional):} \begin{em} #1}
+                        {\vspace*{3mm}\end{em} ]}
+
+%%------------------------------- document-------------------------------------
+END
+
+print("\\newcommand{\\school}{", $UniName, "}\n");
+print("\\newcommand{\\degree}{", $Group, "}\n");
+print("\\newcommand{\\projtitle}{", $Project, "}\n");
+print("\\newcommand{\\projauthor}{", $Author, "}\n");
+print("\\newcommand{\\tutor}{", $Tutor, "}\n"); 
+
+print <<'END';
+\begin{document}
+
+%% preamble page numbers with roman numerals
+
+%%------------------------------- cover page ----------------------------------
+
+\begin{titlepage}
+\center
+
+\vspace{-15mm}
+{\large \textbf{\textsc{\school}}}\\
+
+\vfill
+\includegraphics[width=52mm]{ufaz.png}
+\vfill
+
+{\textbf{Students}}
+
+{\Large \textbf{\projauthor}}\\
+\vfill
+
+{\Large \textbf{\projtitle}}\\[8mm]
+
+\vfill
+
+{\large \degree}\\[8mm]
+{\large \textbf{Professor}: \tutor}\\[8mm]
+
+%\renewcommand{\today}{15 de dezembro de 2023}
+\today
+
+\end{titlepage}
+
+%%------------------------------- table of contents ---------------------------
+
+%% redefine tableofcontents text, ONLY for PT
+\renewcommand{\contentsname}{Index}
+
+\tableofcontents
+\pagebreak
+\pagenumbering{arabic}\setcounter{page}{1}
+
+%%------------------------------- Bibliography --------------------------------
+
+% \renewcommand{\bibname}{Bibliography}
+\printbibliography
+\addcontentsline{toc}{chapter}{\refname}  % add it to table of contents
+
+%%------------------------------- appendix ------------------------------------
+
+% \appendix
+% \section{Appendix}
+
+END
+
+system("pandoc -t latex main.org");
+
+print('\end{document}')
