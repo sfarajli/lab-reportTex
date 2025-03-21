@@ -6,7 +6,10 @@ main.tex: main.org
 main.pdf: main.tex
 	pdflatex $<
 
-clean:
+clean: 
+	rm -f main.pdf
+
+deepclean:
 	rm -f    \
 	main.aux     \
 	texput.log   \
