@@ -27,7 +27,7 @@ print <<'END';
 %% comment next for EN
 \usepackage{tgbonum}
 \usepackage[T1]{fontenc}          % PS fonts
-% \usepackage{newtxtext,newtxmath}  % do not use CM fonts
+\usepackage{newtxtext,newtxmath}  % do not use CM fonts
 \usepackage{booktabs}
 \usepackage{amsmath}              % multi-line and other mathematical statements
 \usepackage{setspace}             % setting the spacing between lines
